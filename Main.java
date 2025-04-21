@@ -54,20 +54,27 @@ public class Main {
 		System.out.println("Task3 " + task3.taskUUID);
 		System.out.println("Task4 " + task4.taskUUID);
 		
-		CompletableFuture<String> result1 = executor.submitTask(task1);
+		Future<String> result1 = executor.submitTask(task1);
 		
-		CompletableFuture<String> result2 = executor.submitTask(task2);
+		Future<String> result2 = executor.submitTask(task2);
 		
-		CompletableFuture<String> result3 = executor.submitTask(task3);
+		Future<String> result3 = executor.submitTask(task3);
 		
-		CompletableFuture<String> result4 = executor.submitTask(task4);
+		Future<String> result4 = executor.submitTask(task4);
 		
 		
-		
-			result1.thenAccept(result -> System.out.println(result));
-			result2.thenAccept(result -> System.out.println(result));
-			result3.thenAccept(result -> System.out.println(result));
-			result4.thenAccept(result -> System.out.println(result));
+		try {
+			result1.get();
+			result2.get();
+			result3.get();
+			result4.get();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		Thread.sleep(2000);
 		executor.shutdown();
@@ -89,7 +96,7 @@ public class Main {
      * @param task Task to be executed by the executor. Must not be null.
      * @return Future for the task asynchronous computation result.
      */
-		<T> CompletableFuture<T> submitTask(Task<T> task);
+		<T> Future<T> submitTask(Task<T> task);
 		void shutdown();
 	}
 	
@@ -167,7 +174,7 @@ public class Main {
 		
 
 		@Override
-		public <T> CompletableFuture<T> submitTask(Task<T> task) {
+		public <T> Future<T> submitTask(Task<T> task) {
 			CompletableFuture<T> completableFuture = new CompletableFuture<T>();
 			//Wrapping the task with QueuedTask
 			QueuedTask<T> queue = new QueuedTask<T>(task, completableFuture);
