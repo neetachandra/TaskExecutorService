@@ -22,4 +22,10 @@ After submitting the taskAction in the workerPool executor service, result of th
 Appraoch 2 : (Order of the tasks are preserved with groups but not across groups)
 1 data structure HashMap named as groupChains is used which basically keeps mapping of groupId and its corresponding completableFuture. 
 
-When the task is submitted that belongs to a group, a compleatableFutute is aquired for that group and the arrived task is chained after lastTask of that group. This way order of the task belonging to same group is preserved.
+When the task is submitted that belongs to a group, a compleatableFutute is aquired for that group and the arrived task is chained after lastTask of that group. This way order of the task belonging to same group is preserved.\
+
+Appraoch 3(Final Approach) :
+For this approach I have merged the above 2 approaches. So I have used 2 dataStructures
+BlockingQueue named as globalTaskQueue and HashMap named as groupChains.
+
+When a tast is submitted through the task exector service, it is first added into the globalTaskQueue. Then the dispatcher thread which is running in the backgroud takes task from the globalTaskQueue and computes the lastCompleatableFuture corresponding to the groupId. HashMap groupChains is used to store lastCompleatableFuture corresponding to groupId. When we get the lastCompleatableFuture, task taken from the queue is chained after lastCompleatableFuture using thenRunAsynch method. So, when a previous task corresponding to a group completes then only next task is executed. 
