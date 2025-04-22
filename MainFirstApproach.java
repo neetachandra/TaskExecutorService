@@ -21,10 +21,10 @@ import openText.Main.TaskExecutor;
 import openText.Main.TaskGroup;
 import openText.Main.TaskType;
 
-public class Main {
+public class MainFirstApproach {
 	
 	public static void main(String[] args) throws InterruptedException{
-		Main obj = new Main();
+		MainFirstApproach obj = new MainFirstApproach();
 		TaskExecutor executor = obj.new TaskExecutorImpl(3);
 		TaskGroup group1 = new TaskGroup(UUID.randomUUID());
 		TaskGroup group2 = new TaskGroup(UUID.randomUUID());
